@@ -1,10 +1,13 @@
 package com.pluralsight;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.*;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         if (args.length != 2) {
@@ -15,9 +18,12 @@ public class App {
         String username = args[0];
         String password = args[1];
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setUrl("jdbc:mysql://localhost:3306/northwind");
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
 
-        try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/northwind", username, password);) {
+        try(Connection connection = dataSource.getConnection();) {
 
             System.out.println("What do you want to do?");
             System.out.println("1) Display all products");
